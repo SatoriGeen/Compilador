@@ -50,7 +50,7 @@ public class Parser {
     }
 
     private Statement statement() {
-        if (match(TipoToken.FOR)) return forStmt();
+    //  if (match(TipoToken.FOR)) return forStmt();
         if (match(TipoToken.IF)) return ifStmt();
         if (match(TipoToken.PRINT)) return printStmt();
         if (match(TipoToken.RETURN)) return returnStmt();
@@ -72,57 +72,41 @@ public class Parser {
         }
         return new StmtIf(condition, thenBranch, elseBranch);
     }
-/*
-    private Statement forStmt() {
-        consume(TipoToken.IZQ_PARENTESIS, "Se esperaba '(' después de 'for'.");
 
-        // Inicialización
-        Statement initializer;
-        if (match(TipoToken.PUNTO_COMA)) {
-            initializer = null;
-        } else if (match(TipoToken.VAR)) {
-            initializer = varDecl();
+    /*
+    private void forStmt() {
+        consume(TipoToken.FOR, "Se esperaba 'for'");
+        consume(TipoToken.IZQ_PARENTESIS, "Se esperaba '(' después de 'for'");
+
+
+        if (check(TipoToken.VAR)) {
+            varDecl();
+        } else if (check(TipoToken.PUNTO_COMA)) {
+            consume(TipoToken.PUNTO_COMA, "Se esperaba ';' después de init vacío");
         } else {
-            initializer = exprStmt();
+            exprStmt();
         }
 
-        // Condición
-        Expression condition = null;
+
         if (!check(TipoToken.PUNTO_COMA)) {
-            condition = expression();
+            expression();
         }
-        consume(TipoToken.PUNTO_COMA, "Se esperaba ';' después de la condición.");
+        consume(TipoToken.PUNTO_COMA, "Se esperaba ';' después de la condición");
 
-        // Incremento
-        Expression increment = null;
-        if (!check(TipoToken.DER_PARENTESIS)) {
-            increment = expression();
-        }
-        consume(TipoToken.DER_PARENTESIS, "Se esperaba ')' después de las cláusulas del for.");
 
-        // Cuerpo
-        Statement body = statement();
+        forStmtInc();
 
-        // Agrega incremento al final del cuerpo
-        if (increment != null) {
-            body = new StmtBlock(List.of(body, new StmtExpression(increment)));
-        }
-
-        // Si no hay condición, es true por defecto (bucle infinito)
-        if (condition == null) {
-            condition = new ExprLiteral(true);
-        }
-
-        body = new StmtLoop(condition, body);
-
-        // Agrega inicialización antes del bucle
-        if (initializer != null) {
-            body = new StmtBlock(List.of(initializer, body));
-        }
-
-        return body;
+        consume(TipoToken.DER_PARENTESIS, "Se esperaba ')' después de los incrementos");
+        statement();
     }
-*/
+
+    private void forStmtInc() {
+        if (!check(TipoToken.DER_PARENTESIS)) {
+            expression();
+        }
+
+    }
+    */
 
     private StmtLoop whileStmt() {
         consume(TipoToken.WHILE, "Se esperaba 'while'");
